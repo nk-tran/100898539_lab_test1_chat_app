@@ -26,32 +26,6 @@ router.post("/room", async (req, res) => {
     }
 });
 
-// Get private messages between two users
-router.get("/private/:from/:to", async (req, res) => {
-    try {
-        const messages = await PrivateMessage.find({
-            $or: [
-                { from_user: req.params.from, to_user: req.params.to },
-                { from_user: req.params.to, to_user: req.params.from }
-            ]
-        });
-        res.json(messages);
-    } catch (err) {
-        res.status(500).json({ message: "Error retrieving private messages" });
-    }
-});
 
-// Send a private message
-router.post("/private", async (req, res) => {
-    const { from_user, to_user, message } = req.body;
-    
-    try {
-        const newMessage = new PrivateMessage({ from_user, to_user, message });
-        await newMessage.save();
-        res.json({ success: true, message: "Private message sent" });
-    } catch (err) {
-        res.status(500).json({ message: "Error sending private message" });
-    }
-});
 
 module.exports = router;
